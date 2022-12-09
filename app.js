@@ -1,3 +1,4 @@
+//prepare data to be send to the server
 async function register(){
     const registerForm = document.getElementById('registerForm');
     const formData = new FormData(registerForm);
@@ -10,6 +11,8 @@ async function register(){
  }
  console.log('account created!',result);
 }
+
+//async wait /*waiting for the server response*/
 
 async function creatAccount(account) {
     try{

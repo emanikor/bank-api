@@ -9,20 +9,38 @@
     <title>Bank app</title>
 </head>
 <body>
+  <div id="app">Loading...</div>
   <template id="login">
     <h1>Bank App</h1>
     <section>
-      <h2>Login</h2>
-      <form id="loginForm">
-        <label for="username">Username</label>
-        <input id="username" name="user" type="text">
-        <button>Login</button>
-      </form>
+      <a href="/dashboard">Login</a>
+    </section>
+  </template>
+  <template id="dashboard">
+    <header>
+      <h1>Bank App</h1>
+      <a href="/login">Logout</a>
+    </header>
+    <section>
+      Balance: 100$
+    </section>
+    <section>
+      <h2>Transactions</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Object</th>
+            <th>Amount</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
     </section>
   </template>
   <hr/>
   <h2>Register</h2>
-  <form id="registerForm" action="//localhost:5000/api/accounts" method="POST">
+  <form id="registerForm" action="//localhost:5500/api/accounts" method="POST">
     <label for="user">Username(required)</label>
     <input id="user" name="user" type="text" maxlength="20">
     <label for="currency">Currency (required)</label>

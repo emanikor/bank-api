@@ -3,9 +3,6 @@ const routes ={
     '/dashboard': {templateId:'dashboard'},
 };
 
-
-
-
 function updateRoute(){
     const path =window.location.pathname;
     const route = routes[path];
@@ -15,12 +12,48 @@ function updateRoute(){
     const app =document.getElementById('app');
     app.innerHTML ='';
     app.appendChild(view);
+    if(!route){
+        return navigate('/login');
+    }
 
+}
+
+function onLinkClink(event){
+    event.preventDefault();
+    navigate(event.target.href);
 }
 function navigate(path){
     window.history.pushstate({}, path,path);
     updateRoute();
 }
+
+async function login(){
+    const loginForm = document.getElementById('loginForm')
+    const user = loginForm.user.value;
+}
+async function getAccount(user) {
+    try{
+        const response = await fetch('//localhost:5500/api/accounts/' + encodeURIComponent(user));
+        return await response.json();
+        }catch(error){
+            return{error:error.message || 'unknown error'};
+        }
+}
+//to get useraccount
+async function login(){
+   const loginForm = document.getElementById('login')
+   const user = loginForm.user.value;
+   const data =await getAccount(user);
+
+ if(data.error){
+    return console.log('loginError', data.error);
+
+ }
+ account = data;
+ navigate('/dashboard');
+
+}
+
 
 
 //prepare data to be send to the server
@@ -35,6 +68,7 @@ async function register(){
     return console.log('An error occurred:', result.error);
  }
  console.log('account created!',result);
+ console.log('hello')
 }
 
 //async wait /*waiting for the server response*/
@@ -55,3 +89,5 @@ async function creatAccount(account) {
         };
     }
 }
+window.onpopstate = () => updateRoute();
+updateRoute();

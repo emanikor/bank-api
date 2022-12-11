@@ -27,13 +27,14 @@ function navigate(path){
     updateRoute();
 }
 
-async function login(){
-    const loginForm = document.getElementById('loginForm')
-    const user = loginForm.user.value;
+function rBtn(event){
+    event.console.log()
+    
 }
+
 async function getAccount(user) {
     try{
-        const response = await fetch('//localhost:5500/api/accounts/' + encodeURIComponent(user));
+        const response = await fetch('//localhost:5500/api/accounts', + encodeURIComponent(user));
         return await response.json();
         }catch(error){
             return{error:error.message || 'unknown error'};
@@ -61,8 +62,13 @@ async function register(){
     const registerForm = document.getElementById('registerForm');
     const formData = new FormData(registerForm);
     const data = object.fromentries(formData);
-    const jsonData = JSON.stringify(object.formEntries(formData));
+    const jsonData = JSON.stringify(object.formEntries(data));
     const result = await createAccount(jsonData);
+    const regBtn = document.getElementById('btn-reg')
+
+regBtn.addEventListener('click',function(){
+     console.log(register)
+})
 
  if(result.error){
     return console.log('An error occurred:', result.error);
@@ -91,3 +97,4 @@ async function creatAccount(account) {
 }
 window.onpopstate = () => updateRoute();
 updateRoute();
+

@@ -11,6 +11,10 @@
 </head>
 <body>
   <div id="app">Loading...</div>
+  <a href="/dashboard" onclick="onLinkClick(event)">Login</a>
+...
+<a href="/login" onclick="onLinkClick(event)">Logout</a>
+
  
   <!-- <template id="login"> -->
     <!-- <h1>Bank App</h1> -->
@@ -54,9 +58,21 @@
       </table>
     </section>
   </template>
-  
+     <div id="login">
+        
+        <section>
+          <h2 class="login-heading">Login</h2>
+          <form id="loginForm" action="javascript:login()">
+            <label for="username">Username</label><br>
+            <input id="username" name="user" type="text"><br>
+            <button>Login</button>
+          </form>
+        </section>
+      </div>
+      <hr>
   <form id="registerForm" action="javascript:register()" method="POST" >
     <div class="container">
+   
       <h2 class="register-heading">Register</h2>
     <label for="user">Username</label><br>
     <input id="user" name="user" type="text"  required>

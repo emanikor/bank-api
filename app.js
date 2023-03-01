@@ -1,9 +1,22 @@
 const routes = {
-    '/login': { templateId: 'login' },
-    '/dashboard': { templateId: 'dashboard' },
+  '/login': { templateId: 'login' },
+  '/dashboard': { templateId: 'dashboard', init: refresh }
+
   };
   
 
+ 
+
+  // function updateDashBoard(dashboard){
+  //   const dashBoard = dashBoard('madkmmckl');
+  
+  // }
+  const account = state.account;
+  updateDashboard()
+
+
+
+// update routes
 function updateRoute(templateId) {
     const path = window.location.pathname;
     const route = routes[path];
@@ -28,7 +41,7 @@ function updateRoute(templateId) {
   }
   
   
-
+// 
 function navigate(path){
     window.history.pushState({}, path, path);
     updateRoute();
@@ -38,45 +51,54 @@ function rBtn(event){
     event.console.log()
     
 }
-//navigate user account
-// async function getAccount(user) {
-//     try{
-//         const response = await fetch('//localhost:5500/api/accounts', + encodeURIComponent(user));
-//         return await response.json();
-//         }catch(error){
-//             return{error:error.message || 'unknown error'};
-//         }
-// }
+const storageKey = 'savedAccount';
 
+// state 
+function updateState(property, newData) {
+  state = Object.freeze({
+    ...state,
+    [property]: newData
+  });
+  console.log(state)
+  
+localStorage.setItem(storageKey, JSON.stringify(state.account));
 
-//to get useraccount
-// async function login(){
-//    const loginForm = document.getElementById('login')
-//    const user = loginForm.user.value;
-//    const data =await getAccount(user);
-
-//  if(data.error){
-//     return console.log('loginError', data.error);
-
-//  }
-//  account = data;
-//  navigate('/dashboard');
-
-// }
+}
 
 
 
-//prepare data to be send to the server
-// function register() {
-//     const registerForm = document.getElementById('registerForm');
-//     const formData = new FormData(registerForm);
-//     const data = Object.fromEntries(formData);
-//     const jsonData = JSON.stringify(data);
-//   }
+let state = Object.freeze({
+  account: null
+});
 
+
+
+
+
+
+let account = null;
+// login 
+
+async function login() {
+  const loginForm = document.getElementById('loginForm')
+  const user = loginForm.user.value;
+  const data = await getAccount(user);
+
+  if (data.error) {
+    return console.log('loginError', data.error);
+  }
+
+  account = data;
+  navigate('/dashboard');
+}
+
+
+
+// registering useraccount
  
 async function register() {
-    
+  
+    const account = updateState('account', result);
     const registerForm = document.getElementById('registerForm');
   const formData = new FormData(registerForm);
   const jsonData = JSON.stringify(Object.fromEntries(formData));
@@ -90,28 +112,10 @@ console.log('Account Created!', result);
 }
 
 
-// async function register(){
-//     const regBtn = document.getElementById('btn-reg');
-//     const registerForm = document.getElementById('registerForm');
-//     const formData = new FormData(registerForm);
-//     const data = object.fromentries(formData);
-//     const jsonData = JSON.stringify(object.formEntries(data));
-//     const result = await createAccount(jsonData);
- 
 
-// regBtn.addEventListener('click',function(){
-//     if(reg==)
-//      console.log(register)
-// })
 
-//  if(result.error){
-//     return console.log('An error occurred:', result.error);
-//  }
-//  console.log('account created!',result);
-//  console.log('hello')
-// }
+// create account
 
-//async wait /*waiting for the server response*/
 async function createAccount(account){
     try{
         const response = await fetch('//localhost:5000/api/accounts',
@@ -131,27 +135,56 @@ async function createAccount(account){
 
 
 
+  
+    // reload account
+    async function updateAccountData() {
+      const account = state.account;
+      if (!account) {
+        return logout();
+      }
+    
+      const data = await getAccount(account.user);
+      if (data.error) {
+        return logout();
+      }
+    
+      updateState('account', data);
+    }
+    
 
-// async function creatAccount(account) {
-//     try{
-//         const response = await fetch('//localhost:5000/api/accounts', {
-//             method:'post',
-//             headers: {'content-type': 'application/json'},
-//             body: account
 
-//         });
-//         return await response.json();
+    // refresh page'
+    async function refresh() {
+      await updateAccountData();
+      updateDashboard();
+    }
+    
+    
+    
 
-//     }catch(error){
-//         return{
-//             error: Error.message || 'unknown error '
-//         };
-//     }
-// }
+// logout function
+function logout() {
+  updateState('account', null);
+  navigate('/login');
+}
 
 
-window.onpopstate = () => updateRoute();
-updateRoute();
+
+function init() {
+  const savedAccount = localStorage.getItem(storageKey);
+  if (savedAccount) {
+    updateState('account', JSON.parse(savedAccount));
+  }
+
+  // Our previous initialization code
+  window.onpopstate = () => updateRoute();
+  updateRoute();
+}
+
+init();
+
+
+
 
 
 
